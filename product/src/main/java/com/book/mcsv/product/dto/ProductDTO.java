@@ -20,14 +20,6 @@ public class ProductDTO {
     @NotNull
     private CategoryDTO categoryDTO;
 
-//    public CategoryDTO getCategoryDTO() {
-//        return category;
-//    }
-//
-//    public void setCategoryDTO(CategoryDTO category) {
-//        this.category = category;
-//    }
-
     public static ProductDTO convert(Product product) {
         ProductDTO productDTO = new ProductDTO();
         productDTO.setNome(product.getNome());
