@@ -1,8 +1,13 @@
 package com.book.mcsv.product.service;
 
+import com.book.mcsv.product.converter.DTOConverter;
 import com.book.mcsv.product.dto.ProductDTO;
 import com.book.mcsv.product.model.Product;
+import com.book.mcsv.product.repository.CategoryRepository;
 import com.book.mcsv.product.repository.ProductRepository;
+import com.book.shoping.client.exception.CategoryNotFoundException;
+
+import com.book.shoping.client.exception.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +20,9 @@ public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     public List<ProductDTO> getAll() {
         List<Product> products = productRepository.findAll();
@@ -35,21 +43,30 @@ public class ProductService {
     public ProductDTO findByProductIdentifier(String productIdentifier) {
         Product product = productRepository.findByProductIdentifier(productIdentifier);
         if (product != null) {
-            return ProductDTO.convert(product);
+            return DTOConverter.convert(product);
         }
-        return null;
+        throw new ProductNotFoundException();
+
     }
 
     public ProductDTO save(ProductDTO productDTO) {
+
+        Boolean existsCategory = categoryRepository.existsById(productDTO.getCategoryDTO().getId());
+        if (!existsCategory) {
+            throw new CategoryNotFoundException();
+        }
+
         Product product = productRepository.save(Product.convert(productDTO));
-        return ProductDTO.convert(product);
+
+        return DTOConverter.convert(product);
     }
 
-    public void delete(long productId) {
+    public void delete(long productId) throws ProductNotFoundException {
         Optional<Product> product = productRepository.findById(productId);
         if (product.isPresent()) {
             productRepository.delete(product.get());
         }
+        throw new ProductNotFoundException();
     }
 
 

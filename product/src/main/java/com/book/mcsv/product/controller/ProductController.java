@@ -1,8 +1,8 @@
 package com.book.mcsv.product.controller;
 
 import com.book.mcsv.product.dto.ProductDTO;
-import com.book.mcsv.product.exception.ProductNotFoundException;
 import com.book.mcsv.product.service.ProductService;
+import com.book.shoping.client.exception.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +28,7 @@ public class ProductController {
     }
 
     @GetMapping("/product/{productIdentifier}")
-    ProductDTO findById(@PathVariable String productIdentifier) {
+    ProductDTO findByProductIdentifier(@PathVariable String productIdentifier) {
         return productService.findByProductIdentifier(productIdentifier);
     }
 
@@ -36,6 +36,7 @@ public class ProductController {
     ProductDTO newProduct(@Valid @RequestBody ProductDTO productDTO) {
         return productService.save(productDTO);
     }
+
     @DeleteMapping("/product/{id}")
     public String delete(@PathVariable Long id) throws ProductNotFoundException {
         productService.delete(id);

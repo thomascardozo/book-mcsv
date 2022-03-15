@@ -13,6 +13,7 @@ public class UserDTO {
     private String email;
     private String telefone;
     private LocalDateTime dataCadastro;
+    private String key;
 
     public static UserDTO convert(User user) {
         UserDTO userDTO = new UserDTO();
@@ -23,6 +24,7 @@ public class UserDTO {
         userDTO.setEmail(user.getEmail());
         userDTO.setTelefone(user.getTelefone());
         userDTO.setDataCadastro(user.getDataCadastro());
+        userDTO.setKey(user.getKey());
 
         return userDTO;
     }

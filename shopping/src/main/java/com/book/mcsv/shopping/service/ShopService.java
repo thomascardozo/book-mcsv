@@ -1,11 +1,14 @@
 package com.book.mcsv.shopping.service;
 
 import com.book.mcsv.shopping.dto.DTOConverter;
+import com.book.mcsv.shopping.dto.ItemDTO;
 import com.book.mcsv.shopping.dto.ShopDTO;
 import com.book.mcsv.shopping.dto.ShopReportDTO;
 import com.book.mcsv.shopping.model.Shop;
 import com.book.mcsv.shopping.repository.ReportRepository;
 import com.book.mcsv.shopping.repository.ShopRepository;
+import com.book.shoping.client.dto.ProductDTO;
+import com.book.shoping.client.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +23,12 @@ public class ShopService {
 
     @Autowired
     private ShopRepository shopRepository;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private ProductService productService;
 
 
     public List<ShopDTO> getAll() {
@@ -57,7 +66,18 @@ public class ShopService {
         return null;
     }
 
-    public ShopDTO save(ShopDTO shopDTO) {
+    public ShopDTO save(ShopDTO shopDTO, String key) {
+
+//        if (userService.getUserByCpf(shopDTO.getUserIdentifier()) == null) {
+//            return null;
+//        }
+//        if (!validateProducts(shopDTO.getItems())) {
+//            return null;
+//        }
+
+        UserDTO userDTO = userService.getUserByCpf(shopDTO.getUserIdentifier(), key);
+        validateProducts(shopDTO.getItems());
+
         shopDTO.setTotal(shopDTO.getItems()
                 .stream()
                 .map(x -> x.getPrice())
@@ -67,6 +87,20 @@ public class ShopService {
         shop.setDate(LocalDateTime.now());
         shop = shopRepository.save(shop);
         return ShopDTO.convert(shop);
+    }
+
+    private boolean validateProducts(List<ItemDTO> items) {
+        for (ItemDTO item : items) {
+
+            ProductDTO productDTO = productService.getProductByIdentifier(item.getProductIdentifier());
+
+            if (productDTO == null) {
+                return false;
+            }
+
+            item.setPrice(productDTO.getPreco());
+        }
+        return true;
     }
 
     public List<ShopDTO> getShopsByFilter(LocalDateTime dataInicio, LocalDateTime dataFim, Float valorMinimo) {

@@ -3,12 +3,14 @@ package com.book.mcsv.user.service;
 import com.book.mcsv.user.dto.UserDTO;
 import com.book.mcsv.user.model.User;
 import com.book.mcsv.user.repository.UserRepository;
+import com.book.shoping.client.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,27 +31,28 @@ public class UserService {
         if (usuario.isPresent()) {
             return UserDTO.convert(usuario.get());
         }
-        return null;
+        throw new UserNotFoundException();
     }
     public UserDTO save(UserDTO userDTO) {
+        userDTO.setKey(UUID.randomUUID().toString());
         userDTO.setDataCadastro(LocalDateTime.now());
         User user = userRepository.save(User.convert(userDTO));
         return UserDTO.convert(user);
     }
 
-    public UserDTO delete(long userId) {
+    public UserDTO delete(long userId) throws UserNotFoundException{
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent()) {
             userRepository.delete(user.get());
         }
-        return null;
+        throw new UserNotFoundException();
     }
-    public UserDTO findByCpf(String cpf) {
-        User user = userRepository.findByCpf(cpf);
+    public UserDTO findByCpfAndKey(String cpf, String key) {
+        User user = userRepository.findByCpfAndKey(cpf, key);
         if (user != null) {
             return UserDTO.convert(user);
         }
-        return null;
+        throw new UserNotFoundException();
     }
 
     public List<UserDTO> queryByName(String name) {

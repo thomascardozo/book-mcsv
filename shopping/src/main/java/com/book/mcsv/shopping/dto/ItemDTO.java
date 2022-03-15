@@ -11,7 +11,7 @@ public class ItemDTO {
 
     @NotBlank
     private String productIdentifier;
-    @NotNull
+    //@NotNull
     private Float price;
 
     public static ItemDTO convert(Item item) {

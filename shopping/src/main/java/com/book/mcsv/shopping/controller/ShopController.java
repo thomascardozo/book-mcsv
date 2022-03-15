@@ -90,9 +90,10 @@ public class ShopController {
         return shopService.getReportByDate(dtInicioConvertida, dtFimConvertida);
     }
 
-    @PostMapping("/shopping")
-    public ShopDTO newShop(@Valid @RequestBody ShopDTO shopDTO) {
-        return shopService.save(shopDTO);
+    @PostMapping("/shopping/")
+    public ShopDTO newShop(@Valid @RequestBody ShopDTO shopDTO,
+                           @RequestHeader(name = "key", required=true) String key) {
+        return shopService.save(shopDTO, key);
     }
 
 }
