@@ -12,29 +12,20 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Service
 public class UserService {
 
-    @Value("${USER_API_URL:http://localhost:8080/user/}")
+    @Value("${USER_API_URL:http://localhost:8080}")
     private String userApiURL;
 
     public UserDTO getUserByCpf(String cpf, String key) {
-
-        try{
+        try {
             RestTemplate restTemplate = new RestTemplate();
-            //String userApiURL = "http://localhost:8080";
-            //String url = "http://localhost:8080/user/cpf/" + cpf;
 
-            UriComponentsBuilder builder = UriComponentsBuilder
-                    .fromHttpUrl(userApiURL + "/user/cpf/" + cpf);
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(userApiURL + "/user/cpf/" + cpf);
             builder.queryParam("key", key);
 
-            //ResponseEntity<UserDTO> response = restTemplate.getForEntity(url, UserDTO.class);
-
-            ResponseEntity<UserDTO> response = restTemplate
-                    .getForEntity(builder.toUriString(), UserDTO.class);
-
+            ResponseEntity<UserDTO> response = restTemplate.getForEntity(builder.toUriString(), UserDTO.class);
             return response.getBody();
-        } catch (HttpClientErrorException.NotFound e){
+        } catch (HttpClientErrorException.NotFound e) {
             throw new UserNotFoundException();
         }
-
     }
 }

@@ -5,14 +5,12 @@ import com.book.mcsv.shopping.dto.ItemDTO;
 import com.book.mcsv.shopping.dto.ShopDTO;
 import com.book.mcsv.shopping.dto.ShopReportDTO;
 import com.book.mcsv.shopping.model.Shop;
-import com.book.mcsv.shopping.repository.ReportRepository;
 import com.book.mcsv.shopping.repository.ShopRepository;
 import com.book.shoping.client.dto.ProductDTO;
 import com.book.shoping.client.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -68,13 +66,6 @@ public class ShopService {
 
     public ShopDTO save(ShopDTO shopDTO, String key) {
 
-//        if (userService.getUserByCpf(shopDTO.getUserIdentifier()) == null) {
-//            return null;
-//        }
-//        if (!validateProducts(shopDTO.getItems())) {
-//            return null;
-//        }
-
         UserDTO userDTO = userService.getUserByCpf(shopDTO.getUserIdentifier(), key);
         validateProducts(shopDTO.getItems());
 
@@ -86,7 +77,7 @@ public class ShopService {
         Shop shop = Shop.convert(shopDTO);
         shop.setDate(LocalDateTime.now());
         shop = shopRepository.save(shop);
-        return ShopDTO.convert(shop);
+        return DTOConverter.convert(shop);
     }
 
     private boolean validateProducts(List<ItemDTO> items) {

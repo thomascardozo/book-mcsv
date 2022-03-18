@@ -18,7 +18,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-
     @GetMapping("/user")
     public List<UserDTO> getUsers() {
 
@@ -34,7 +33,7 @@ public class UserController {
 
     @GetMapping("/user/cpf/{cpf}")
     public UserDTO findByCpf(@PathVariable String cpf,
-                             @RequestHeader(name = "key", required=true) String key) {
+                             @RequestParam(name = "key") String key) {
         return userService.findByCpfAndKey(cpf, key);
     }
 

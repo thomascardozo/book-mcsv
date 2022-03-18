@@ -21,7 +21,7 @@ services:
       - "5050:80"
 
   product:
-    image: product
+    image: loja/product
     ports:
       - "8081:8081"
     environment:
@@ -32,7 +32,7 @@ services:
       - postgres
 
   user:
-    image: user
+    image: loja/user
     ports:
       - "8080:8080"
     environment:
@@ -43,7 +43,7 @@ services:
       - postgres
 
   shopping:
-    image: shopping
+    image: loja/shopping
     ports:
       - "8082:8082"
     environment:

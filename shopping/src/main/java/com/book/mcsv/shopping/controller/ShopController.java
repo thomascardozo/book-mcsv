@@ -7,15 +7,11 @@ import com.book.mcsv.shopping.service.ShopService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Objects;
 
 @Data
 @RestController
@@ -66,11 +62,6 @@ public class ShopController {
             vlrMinimo = shopsDateValueDTO.valorMinimo;
         }
 
-        log.info("VALOR FLOAT >>>>>>>>>> " + shopsDateValueDTO.valorMinimo);
-
-        log.info("Data Inicio ########### " + dtInicioConvertida);
-        log.info("Data FIM @@@@@@ ########### " + dtFimConvertida);
-
         return shopService.getShopsByFilter(dtInicioConvertida, dtFimConvertida, vlrMinimo);
     }
 
@@ -90,9 +81,9 @@ public class ShopController {
         return shopService.getReportByDate(dtInicioConvertida, dtFimConvertida);
     }
 
-    @PostMapping("/shopping/")
-    public ShopDTO newShop(@Valid @RequestBody ShopDTO shopDTO,
-                           @RequestHeader(name = "key", required=true) String key) {
+    @PostMapping("/shopping")
+    public ShopDTO newShop(@RequestHeader(name = "key", required=true) String key,
+                           @RequestBody ShopDTO shopDTO) {
         return shopService.save(shopDTO, key);
     }
 
